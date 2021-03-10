@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container">
+    <h2>Watchlist</h2>
+
+    {% for listing in watchlist %}
+        <div class="card mb-3">
+            <div class="row">
+                <div class="{{ listing.image_url|yesno:'col-md-4,d-none' }}">
+                    <img src="{{ listing.image_url }}" class="card-img" alt="{{ listing.title }}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ listing.title }}</h5>
+                        <p class="card-text">{{ listing.description }}</p>
+                        <p class="card-text">${{ listing.starting_bid }}</p>
+                        <a class="btn btn-outline-success" href="{% url 'listings.show' listing.id %}">Bid Now!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-danger">No watchlisted Listings</div>
+    {% endfor %}
+</div>
+{% endblock %}
