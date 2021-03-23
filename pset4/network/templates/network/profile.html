@@ -1,0 +1,56 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table text-center">
+                    <tr>
+                        <td>{{ profile.username }}</td>
+                        <td>Followers: 10</td>
+                        {% if user.is_authenticated and user.id != profile.id %}
+                            <td>
+                                <form action="{% url 'follow-toggle' profile.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-{{ isFollowing | yesno:'danger,primary' }}">
+                                        {{ isFollowing | yesno:'UnFollow,Follow' }}
+                                    </button>
+                                </form>
+                            </td>
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                {% for post in posts %}
+                    {% include 'components/post.html' %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if posts.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}">previous</a></li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <span class="page-link">Page {{ posts.number }} of {{ posts.paginator.num_pages }}.</span>
+                        </li>
+
+                        {% if posts.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}">next</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ posts.paginator.num_pages }}">last &raquo;</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+<div class="border p-4 my-4">
+    <h3>
+        <a href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+    </h3>
+    <p id="post-content-{{ post.id }}">{{ post.content }}</p>
+    {% if user.id == post.user.id %}
+        <form
+            method="post" 
+            action="{% url 'edit_post' post.id %}" 
+            class="edit-post-form d-none" 
+            id="edit-post-{{ post.id }}"
+            onSubmit="saveEditedPost(event, {{ post.id }})"
+        >
+            {% csrf_token %}
+            <textarea class="form-control my-2" name="content">{{ post.content }}</textarea>
+            <button class="btn btn-sm btn-success" type="submit">Save</button> 
+            <button class="btn btn-sm btn-danger" onClick="canclePostEdit(event, {{ post.id }})">Cancle</button>
+        </form>
+    {% endif %}
+    <p>{{ post.created_at }}</p>
+    <div>
+        <a href="{% url 'toggle_like' post.id %}" onClick="toggleLike(event, {{ post.id }})">
+        {% if post.likedBy.id == user.id %}
+            {% include 'icons/liked.html' %}
+        {% else %}
+            {% include 'icons/like.html' %}
+        {% endif %}
+        </a>
+        <span id="likes-count-{{ post.id }}">{{ post.likesCount  }}</span>
+    </div>
+    {% if user.id == post.user.id %}
+        <div>
+            <a href="#" class="edit-post" onClick="editPost(event, {{ post.id }})">Edit post</a>
+        </div>
+    {% endif %}
+</div>
